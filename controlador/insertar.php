@@ -10,14 +10,18 @@ if (!empty($_POST["btnenviar"])) {
 
     if (in_array($tipoImagen, ["jpg", "jpeg", "png"])) {
 
-        $stmt = $db->prepare("INSERT INTO imagenes (nombre, ruta) VALUES (?, '')");
-        $stmt->execute([$nombreimagen]);
+        $idProvisional = time();
+        $rutaFinal = $directorio . $idProvisional . "." . $tipoImagen;
+
+        $stmt = $db->prepare("INSERT INTO imagenes (nombre, ruta) VALUES (?, ?)");
+        $stmt->execute([$nombreimagen , $rutaFinal]);
+
         $idRegistro = $db->lastInsertId();
+        $rutaFinalDefinitiva = $directorio . $idRegistro . "." . $tipoImagen;
 
-        $rutaFinal = $directorio . $idRegistro . "." . $tipoImagen;
-        $db->prepare("UPDATE imagenes SET ruta = ? WHERE id = ?")->execute([$rutaFinal, $idRegistro]);
+        $db->prepare("UPDATE imagenes SET ruta = ? WHERE id = ?")->execute([$rutaFinalDefinitiva, $idRegistro]);
 
-        if (move_uploaded_file($imagen, $rutaFinal)) {
+        if (move_uploaded_file($imagen, $rutaFinalDefinitiva)) {
             echo "<div class='alert alert-success'>Imagen subida correctamente: $nombreimagen</div>";
         } else {
             echo "<div class='alert alert-danger'>Error al guardar la imagen al directorio.</div>";

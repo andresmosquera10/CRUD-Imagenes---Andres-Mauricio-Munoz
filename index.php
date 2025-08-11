@@ -12,6 +12,10 @@
         $mensaje = require 'controlador/editar.php';
     }
 
+    if (isset($_POST['btnenviar'])) {
+        $mensaje = require 'controlador/insertar.php';
+    }
+
     $sql = "SELECT * FROM imagenes ORDER BY id ASC";
     $resultado = $db->query($sql);
     ?>
@@ -77,6 +81,7 @@
                                  class="img-thumbnail" style="width: 100px; height: 100px;">
                          </td>
                          <td>
+                             <!-- Botón editar -->
                              <a href="#" class="btn btn-warning"
                                  data-bs-toggle="modal"
                                  data-bs-target="#exampleModalEditar<?= $datos->id ?>">
